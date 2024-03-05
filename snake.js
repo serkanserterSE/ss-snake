@@ -1,5 +1,8 @@
-var isStopped = false;
+var height = 400;
+var width = 300;
+var isStopped;
 var speed = 4;
+var score = 0;
 var size = 20;
 var direction = 0;
 var directions = ["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"];
@@ -9,41 +12,28 @@ var moves = [
     (x, y) => { return { y: (y + size), x: x } },
     (x, y) => { return { y: (y - size), x: x } }];
 
-var node = {
-    x: 100,
-    y: 100
-};
-
-var node2 = {
-    x: (100 - size),
-    y: 100
-};
-
-var node3 = {
-    x: (100 - (2 * size)),
-    y: 100
-};
-
-var node4 = {
-    x: (100 - (3 * size)),
-    y: 100
-};
-
-var nodeList = [node, node2, node3, node4];
+var nodeList = [];
 var coinList = [];
 
-function setup() {
-    noStroke();
-    height = 400;
-    width = 300;
-    let canvas = createCanvas(width, height);
-    canvas.parent('container');
-    frameRate(speed);
+function init() {
+    direction = 0;
+    nodeList = JSON.parse(JSON.stringify([]));
+    nodeList = [{ x: 100, y: 100 }, { x: (100 - size), y: 100 }, { x: (100 - (2 * size)), y: 100 }, { x: (100 - (3 * size)), y: 100 }];
+    coinList = JSON.parse(JSON.stringify([]));
+    isStopped = true;
+}
 
+function setup() {
+    init();
+    noStroke();
+    let canvas = createCanvas(300, 400);
+    canvas.parent('container');
 }
 
 function draw() {
+    console.log(isStopped);
     if (isStopped) return;
+    frameRate(speed);
     move();
 }
 
@@ -87,24 +77,26 @@ function move() {
             generateNode(nodeList[i]);
         }
     }
-    generateCoin();
-    gainCoin(firstNode);
+
     checkForPanel();
     checkSnake();
+
+    generateCoin();
+    gainCoin(firstNode);
 }
 
 function checkSnake() {
     let firstNode = nodeList[0];
     for (let i = 1; i < nodeList.length; i++) {
         let node = nodeList[i];
-        let nxMax = node.x + size / 2;
-        let nxMin = node.x - size / 2;
-        let nyMax = node.y + size / 2;
-        let nyMin = node.y - size / 2;
+        let nxMax = node.x + (size);
+        let nxMin = node.x - (size);
+        let nyMax = node.y + (size);
+        let nyMin = node.y - (size);
 
         if ((firstNode.x < nxMax && firstNode.x > nxMin) && (firstNode.y < nyMax && firstNode.y > nyMin)) {
-            isStopped = true;
-            speed = 0;
+            debugger
+            gameOver();
         }
     }
 }
@@ -164,23 +156,30 @@ function generateCoin() {
             ellipse(coin.x, coin.y, size, size);
         }
     }
+    fill(0);
 }
 
 function gainCoin(node) {
     for (let i = 0; i < coinList.length; i++) {
         let coin = coinList[i];
-        let cxMax = coin.x + size / 2;
-        let cxMin = coin.x - size / 2;
-        let cyMax = coin.y + size / 2;
-        let cyMin = coin.y - size / 2;
+        let cxMax = coin.x + (size * 0.5);
+        let cxMin = coin.x - (size * 0.5);
+        let cyMax = coin.y + (size * 0.5);
+        let cyMin = coin.y - (size * 0.5);
 
         if ((node.x <= cxMax && node.x >= cxMin) && (node.y <= cyMax && node.y >= cyMin)) {
             let lastNode = nodeList[nodeList.length - 1];
             nodeList.push({ x: lastNode.x - size, y: lastNode.y });
             coinList.splice(i, 1);
             fill(255);
-            ellipse(coin.x, coin.y, size + 2, size + 2);
-            fill(0)
+            ellipse(coin.x, coin.y, size + 3, size + 3);
+            fill(0);
+            score += 1;
+            document.getElementById('scoreText').innerHTML = score;
+            document.getElementById('scoreText2').innerHTML = score;
+            if (score % 3 == 0) {
+                speed++;
+            }
         }
     }
 }
@@ -191,3 +190,48 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function startGame() {
+    isStopped = false;
+    document.getElementById("divGameStart").style.display = "none";
+    document.getElementById("btnPause").style.display = "block";
+    document.getElementById("container").style.opacity = "1";
+}
+
+function continueGame() {
+    isStopped = false;
+    document.getElementById("btnContinue").style.display = "none";
+    document.getElementById("btnPause").style.display = "block";
+    document.getElementById("container").style.opacity = "1";
+}
+
+function pauseGame() {
+    isStopped = true;
+    document.getElementById("btnContinue").style.display = "block";
+    document.getElementById("btnPause").style.display = "none";
+    document.getElementById("container").style.opacity = "0.1";
+}
+
+function gameOver() {
+    isStopped = true;
+    document.getElementById("btnContinue").style.display = "none";
+    document.getElementById("btnPause").style.display = "none";
+    document.getElementById("container").style.opacity = "0.1";
+    document.getElementById("divGameOver").style.display = "flex";
+}
+
+function tryAgain() {
+    clear();
+    document.getElementById("btnContinue").style.display = "none";
+    document.getElementById("btnPause").style.display = "block";
+    document.getElementById("container").style.opacity = "1";
+    document.getElementById("divGameOver").style.display = "none";
+    direction = 0;
+    speed = 4;
+    score = 0;
+    nodeList = JSON.parse(JSON.stringify([]));
+    nodeList = [{ x: 100, y: 100 }, { x: (100 - size), y: 100 }, { x: (100 - (2 * size)), y: 100 }, { x: (100 - (3 * size)), y: 100 }];
+    coinList = JSON.parse(JSON.stringify([]));
+    document.getElementById('scoreText').innerHTML = score;
+    document.getElementById('scoreText2').innerHTML = score;
+    isStopped = false;
+} 
