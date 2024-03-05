@@ -47,6 +47,18 @@ function draw() {
     move();
 }
 
+function checkButtonClicked(btnDirection) {
+    if (btnDirection == directions[0] && direction != 1) {
+        direction = 0;
+    } else if (btnDirection == directions[1] && direction != 0) {
+        direction = 1;
+    } else if (btnDirection == directions[2] && direction != 3) {
+        direction = 2;
+    } else if (btnDirection == directions[3] && direction != 2) {
+        direction = 3;
+    }
+}
+
 function checkKeyPressed() {
     if (key == directions[0] && direction != 1) {
         direction = 0;

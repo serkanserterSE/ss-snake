@@ -7,35 +7,27 @@
     <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
         integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
     <script src="snake.js"></script>
-    <style>
-        .panel {
-            display: flex;
-            flex-direction: column;
-            flex-wrap: nowrap;
-            align-content: center;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #container {
-            box-shadow: 3px 3px 4px 3px #00000055;
-            border: 2px solid #00000055;
-            display: flex;
-            flex-direction: column;
-            flex-wrap: nowrap;
-            align-content: center;
-            justify-content: center;
-            align-items: center;
-            height: 400px;
-            width: 300px;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
     <div class="panel">
         <div id="container">
 
+        </div>
+        <div>
+            <div id="divButtons">
+                <div id="divButtonUp">
+                    <button type="button" onclick="checkButtonClicked('ArrowUp')">&uarr;</button>
+                </div>
+                <div id="divButtonLeftRight">
+                    <button type="button" onclick="checkButtonClicked('ArrowLeft')">&larr;</button>
+                    <button type="button" onclick="checkButtonClicked('ArrowRight')">&rarr;</button>
+                </div>
+                <div id="divButtonDown">
+                    <button type="button" onclick="checkButtonClicked('ArrowDown')">&darr;</button>
+                </div>
+            </div>
         </div>
     </div>
 </body>
