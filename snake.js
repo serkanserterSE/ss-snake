@@ -1,5 +1,5 @@
-var height = 400;
-var width = 300;
+const height = 400;
+const width = 300;
 var isStopped;
 var speed = 4;
 var score = 0;
@@ -26,7 +26,7 @@ function init() {
 function setup() {
     init();
     noStroke();
-    let canvas = createCanvas(300, 400);
+    let canvas = createCanvas(width, height);
     canvas.parent('container');
 }
 
